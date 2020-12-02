@@ -1,0 +1,52 @@
+#!/bin/bash
+# gu - Git Updater
+# Perform Updates to Git Repos in a single directory.
+# Template assumes your repos are located in ~/github
+
+# Heading
+echo; echo "Privo Github Updater"; echo
+
+# Menu
+PS3='Please enter your choice: '
+echo
+options=("Update All" "Clean house" "Clean Commit" "Quit")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "Update All")
+        for gitdirs in ~/github/*/*/ ; do
+            cd $gitdirs
+            echo
+            echo "Updating ${gitdirs}"
+            echo
+            git pull
+        done
+  break
+          ;;
+        "Clean house")
+        for gitdirs in ~/github/*/*/ ; do
+            cd $gitdirs
+            echo
+            echo "Updating ${gitdirs}"
+            echo
+            git fetch -p
+        done
+          break
+          ;;
+        "Clean Commit")
+            echo "What is your commit message?"
+            read COMMITMSG
+            git -C $PWD pull
+            git -C $PWD add .
+            git -C $PWD commit -m "${COMMITMSG}"
+            git -C $PWD push
+            echo
+            git -C $PWD status
+          break
+          ;;
+        "Quit")
+            break
+            ;;
+        *) echo invalid option;;
+    esac
+done
